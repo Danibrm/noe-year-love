@@ -1,0 +1,279 @@
+Ben, [7/28/2025 11:33 AM]
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>بازی عاشقانه برای هستی</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
+  body {
+    background: linear-gradient(135deg, #ffe6f2, #f9f0ff);
+    font-family: 'Vazirmatn', Tahoma, Geneva, Verdana, sans-serif;
+    color: #5a2a4a;
+    text-align: center;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  h1 {
+    font-family: 'Cursive', cursive;
+    font-size: 3em;
+    margin-bottom: 10px;
+  }
+  .question-box {
+    background: #fff0f6;
+    border-radius: 20px;
+    padding: 25px 20px;
+    box-shadow: 0 8px 20px rgba(90, 42, 74, 0.1);
+    max-width: 450px;
+    margin: 0 auto;
+  }
+  .question-text {
+    font-size: 1.4em;
+    margin-bottom: 20px;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  button.option-btn {
+    background-color: #f8cdda;
+    border: none;
+    padding: 12px 18px;
+    font-size: 1.2em;
+    border-radius: 25px;
+    cursor: pointer;
+    color: #5a2a4a;
+    transition: background-color 0.3s ease;
+  }
+  button.option-btn:hover {
+    background-color: #f1a5c3;
+  }
+  .message {
+    margin-top: 20px;
+    font-size: 1.3em;
+    min-height: 45px;
+    color: #7a3f6c;
+    font-weight: 600;
+  }
+  #startBtn {
+    background-color: #f8cdda;
+    border: none;
+    padding: 15px 35px;
+    font-size: 1.5em;
+    border-radius: 30px;
+    cursor: pointer;
+    color: #5a2a4a;
+    transition: background-color 0.3s ease;
+  }
+  #startBtn:hover {
+    background-color: #f1a5c3;
+  }
+  .final-message {
+    font-size: 1.7em;
+    color: #b00059;
+    margin-top: 30px;
+    font-weight: 700;
+  }
+  /* Responsive */
+  @media (max-width: 480px) {
+    .question-box {
+      max-width: 90vw;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2.4em;
+    }
+    button.option-btn, #startBtn {
+      font-size: 1.1em;
+      padding: 12px 18px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>سلام هستیِ من ❤️</h1>
+<p>امروز یه بازی کوچیک و عاشقانه دارم برات! آماده‌ای؟</p>
+<button id="startBtn">شروع بازی</button>
+
+<div class="question-box" style="display:none;">
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="message" id="message"></div>
+</div>
+
+<div class="final-message" id="finalMessage" style="display:none;"></div>
+
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/22/audio_c7a9d4f2ee.mp3?filename=romantic-acoustic-13752.mp3" type="audio/mpeg" />
+  مرورگر شما پخش موزیک را پشتیبانی نمی‌کند.
+</audio>
+
+<script>
+  const startBtn = document.getElementById('startBtn');
+  const questionBox = document.querySelector('.question-box');
+  const questionText = document.getElementById('questionText');
+  const optionsContainer = document.getElementById('optionsContainer');
+  const message = document.getElementById('message');
+  const finalMessage = document.getElementById('finalMessage');
+  const bgMusic = document.getElementById('bgMusic');
+
+  const questions = [
+    {
+      question: 'اولین بار کجا دیدمت؟',
+      options: ['تو کلاس زبان', 'پارک', 'کتابخانه'],
+      correct: 'تو کلاس زبان',
+      wrongMessages: {
+        'پارک': 'ای بابا، نه عزیزم! اونجا نبودیم.',
+        'کتابخانه': 'عزیزم قدمت رابطمون بیشتر از این چیزاست!'
+      }
+    },
+    {
+      question: 'ما چند ساله باهمیم؟',
+      options: ['۳ سال', '۱ سال', '۵ سال'],
+      correct: '۵ سال',
+      wrongMessages: {
+        '۳ سال': 'عزیزم قدمت رابطمون بیشتر از این چیزاست!',
+        '۱ سال': 'عزیزم قدمت رابطمون بیشتر از این چیزاست!'
+      }
+    },
+    {
+      question: 'غذای مورد علاقه‌ی من چیه؟ 🤭💕',
+      options: ['پیتزا', 'قرمه سبزی', 'شما'],
+
+Ben, [7/28/2025 11:33 AM]
+correct: 'شما',
+      wrongMessages: {
+        'پیتزا': 'ای بابا بیشتر دقت کن خوشمزه!',
+        'قرمه سبزی': 'ای بابا بیشتر دقت کن خوشمزه!'
+      }
+    },
+    {
+      question: 'می‌خوریش یا می‌بریش؟ 😂',
+      options: ['می‌خورم', 'می‌برم', 'عشق خوردنی و بردنی نیست'],
+      correct: 'عشق خوردنی و بردنی نیست',
+      wrongMessages: {
+        'می‌خورم': 'ای آدم منحرف!',
+        'می‌برم': 'ای آدم منحرف!'
+      }
+    },
+    {
+      question: 'وقتی ناراحتم، چی حالمو خوب می‌کنه؟',
+      options: ['غذا', 'خواب', 'شما'],
+      correct: 'شما',
+      wrongMessages: {
+        'غذا': 'من گشنم نمی‌شه!',
+        'خواب': 'من خوابم نمیاد!'
+      }
+    },
+    {
+      question: 'اگه یه روز من گم شم، کجا دنبالم می‌گردی؟',
+      options: ['تو اتاقم', 'تو کلاس زبان', 'تو قلبت'],
+      correct: 'تو قلبت',
+      wrongMessages: {
+        'تو اتاقم': 'ای بابا اینجا چرا همه چی قرمزه🤭💕',
+        'تو کلاس زبان': 'ای بابا اینجا چرا همه چی قرمزه🤭💕'
+      }
+    },
+    {
+      question: 'بزرگ‌ترین آرزوی من چیه؟',
+      options: ['ماشین لاکچری', 'خونه لاکچری', 'زندگی با شما'],
+      correct: 'زندگی با شما',
+      wrongMessages: {
+        'ماشین لاکچری': 'ناموسااا؟😐',
+        'خونه لاکچری': 'ناموسااا؟😐'
+      }
+    },
+    {
+      question: 'هلو یا آلبالو؟ 🤭💕',
+      options: ['هلو', 'آلبالو', 'دوتاش'],
+      correct: 'دوتاش',
+      wrongMessages: {
+        'هلو': 'ای بابا دهنم آب افتاد🤭💕',
+        'آلبالو': 'ای بابا دهنم آب افتاد🤭💕'
+      }
+    },
+    {
+      question: 'می‌خوریش یا می‌بریش؟ 😂',
+      options: ['می‌خورم', 'می‌برم', 'عشق خوردنی و بردنی نیست'],
+      correct: 'می‌خورم',
+      wrongMessages: {
+        'می‌برم': 'دیگه اینبار باید بخوریش😂🤭',
+        'عشق خوردنی و بردنی نیست': 'آفرین! اما بهتره این دفعه بخوریش 😂'
+      }
+    },
+    {
+      question: 'تو رو بغل کنم چی میشه؟',
+      options: ['ساکت میشی', 'خوابم می‌بره', 'دنیا آروم میشه'],
+      correct: 'دنیا آروم میشه',
+      wrongMessages: {
+        'ساکت میشی': 'نههه! بغل تو یعنی صلح جهانی آخه :)',
+        'خوابم می‌بره': 'نههه! بغل تو یعنی صلح جهانی آخه :)'
+      }
+    }
+  ];
+
+  const finalLoveMessage = هستیِ من،  
+یک سال شد!  
+یک سال اذیت کردنت، قربون صدقه رفتنت، خندیدنت، ناز کشیدنت، و بیشتر از همه… دوست داشتنت.  
+به یه سال قانع نیستم…  
+من یه عمر می‌خوامت، قلبم. 🤍;
+
+  let currentQuestionIndex = 0;
+
+  function showQuestion(index) {
+    message.textContent = '';
+    const q = questions[index];
+    questionText.textContent = q.question;
+    optionsContainer.innerHTML = '';
+
+    q.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.classList.add('option-btn');
+      btn.textContent = opt;
+      btn.onclick = () => checkAnswer(opt);
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(selected) {
+    const currentQ = questions[currentQuestionIndex];
+    if (selected === currentQ.correct) {
+      message.style.color = '#3a9a60'; // سبز برای درست
+      message.textContent = 'آفرین عزیزم! ❤️';
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        setTimeout(() => {
+          showQuestion(currentQuestionIndex);
+        }, 1200);
+      } else {
+        endGame();
+      }
+    } else {
+      message.style.color = '#b00059'; // قرمز برای اشتباه
+      message.textContent = currentQ.wrongMessages[selected] || 'جواب اشتباهه!';
+    }
+  }
+
+  function endGame() {
+    questionBox.style.display = 'none';
+    finalMessage.style.display = 'block';
+    finalMessage.textContent = finalLoveMessage;
+    bgMusic.pause();
+  }
+
+  startBtn.onclick = () => {
+    startBtn.style.display = 'none';
+    questionBox.style.display = 'block';
+    bgMusic.play();
+    showQuestion(currentQuestionIndex);
+  };
+</script>
+
+</body>
+</html>
